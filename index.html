@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عذرخواهی من</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffd1dc, #ff69b4);
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            margin: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease;
+        }
+
+        .container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1 {
+            color: #ff1493;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .frog {
+            font-size: 5rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+            transform-origin: center;
+        }
+
+        .frog:hover {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .frog::after {
+            content: '💕';
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .frog:hover::after {
+            opacity: 1;
+            top: -30px;
+        }
+
+        @keyframes frogJump {
+            0% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-30px) rotate(-10deg); }
+            50% { transform: translateY(-50px) rotate(10deg); }
+            75% { transform: translateY(-30px) rotate(-10deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        @keyframes frogSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .frog.jumping {
+            animation: frogJump 0.8s ease;
+        }
+
+        .frog.spinning {
+            animation: frogSpin 1s linear;
+        }
+
+        .frog-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .frog-trail {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .frog-trail-heart {
+            position: absolute;
+            font-size: 1rem;
+            opacity: 0;
+            animation: trailFade 1s ease-out;
+        }
+
+        @keyframes trailFade {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+
+        .message {
+            color: #666;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin: 1.5rem 0;
+        }
+
+        .heart {
+            color: #ff1493;
+            font-size: 2rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .signature {
+            font-style: italic;
+            color: #ff1493;
+            margin-top: 2rem;
+        }
+
+        .floating-hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: float 6s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts" id="floatingHearts"></div>
+    <div class="container" id="mainContainer">
+        <h1>عذرخواهی من <span class="heart">❤️</span></h1>
+        <div class="frog-container">
+            <div class="frog" onclick="makeFrogJump(this)" onmouseover="createFrogTrail(this)">🐸</div>
+            <div class="frog-trail"></div>
+        </div>
+        <div class="message">
+            <p>همونطوری که قورباقه به برگ نیلوفر آبی نیاز داره، منم به تو توی زندگیم نیاز دارم.</p>
+            <p>قسم می‌خورم که بهتر باشم، بیشتر فکر کنم و قدر هر لحظه با تو رو بیشتر بدونم.</p>
+            <p>تو برای من دنیایی هستی و من واقعاً از هر آسیبی که زدم متأسفم.</p>
+        </div>
+        <div class="frog-container">
+            <div class="frog" onclick="makeFrogJump(this)" onmouseover="createFrogTrail(this)">🐸</div>
+            <div class="frog-trail"></div>
+        </div>
+        <div class="signature">
+            <p>با تمام عشق و یک جهش در قلبم،</p>
+            <p>عرشیا</p>
+        </div>
+    </div>
+
+    <script>
+        // Show container with fade-in effect
+        window.addEventListener('load', () => {
+            document.getElementById('mainContainer').classList.add('show');
+            createFloatingHearts();
+        });
+
+        // Enhanced frog jumping with trail effect
+        function makeFrogJump(frog) {
+            // Remove any existing animations
+            frog.classList.remove('jumping', 'spinning');
+            frog.offsetHeight; // Trigger reflow
+
+            // Randomly choose between jump and spin
+            const animation = Math.random() > 0.5 ? 'jumping' : 'spinning';
+            frog.classList.add(animation);
+
+            // Create heart trail
+            createFrogTrail(frog);
+
+            // Remove animation class after it completes
+            setTimeout(() => {
+                frog.classList.remove(animation);
+            }, animation === 'jumping' ? 800 : 1000);
+        }
+
+        // Create heart trail effect
+        function createFrogTrail(frog) {
+            const trail = frog.parentElement.querySelector('.frog-trail');
+            const heart = document.createElement('div');
+            heart.className = 'frog-trail-heart';
+            heart.textContent = '💕';
+            
+            // Random position around the frog
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 30 + Math.random() * 20;
+            const x = Math.cos(angle) * distance;
+            const y = Math.sin(angle) * distance;
+            
+            heart.style.left = `calc(50% + ${x}px)`;
+            heart.style.top = `calc(50% + ${y}px)`;
+            
+            trail.appendChild(heart);
+            
+            // Remove the heart after animation
+            setTimeout(() => {
+                heart.remove();
+            }, 1000);
+        }
+
+        // Add random frog movements
+        setInterval(() => {
+            const frogs = document.querySelectorAll('.frog');
+            frogs.forEach(frog => {
+                if (Math.random() < 0.1) { // 10% chance to move
+                    makeFrogJump(frog);
+                }
+            });
+        }, 3000);
+
+        // Create floating hearts
+        function createFloatingHearts() {
+            const container = document.getElementById('floatingHearts');
+            const hearts = ['❤️', '💖', '💝', '💕'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                container.appendChild(heart);
+
+                // Remove heart after animation
+                setTimeout(() => {
+                    heart.remove();
+                }, 6000);
+            }, 300);
+        }
+    </script>
+</body>
+</html> 
